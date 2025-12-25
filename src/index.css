@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* BebeMais Design System - Delivery de Bebidas
+   Paleta: Âmbar/Dourado (cerveja), Marrom escuro, Laranja vibrante
+   All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 40 30% 98%;
+    --foreground: 30 25% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 30 25% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 30 25% 12%;
+
+    --primary: 38 92% 50%; /* Âmbar/Dourado vibrante */
+    --primary-foreground: 30 25% 10%;
+    --primary-glow: 38 95% 55%;
+    --primary-dark: 35 85% 40%;
+
+    --secondary: 25 70% 20%; /* Marrom escuro */
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 40 20% 94%;
+    --muted-foreground: 30 15% 45%;
+
+    --accent: 24 95% 53%; /* Laranja vibrante */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 40 20% 88%;
+    --input: 40 15% 92%;
+    --ring: 38 92% 50%;
+
+    --radius: 0.75rem;
+
+    --gradient-hero: linear-gradient(135deg, hsl(38 92% 50%), hsl(30 85% 45%), hsl(24 95% 53%));
+    --gradient-card: linear-gradient(to bottom, hsl(0 0% 100%), hsl(40 30% 97%));
+    --gradient-promo: linear-gradient(135deg, hsl(25 70% 20%), hsl(30 60% 15%));
+
+    --shadow-elegant: 0 10px 30px -10px hsl(38 92% 50% / 0.3);
+    --shadow-glow: 0 0 40px hsl(38 95% 55% / 0.25);
+    
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .dark {
+    --background: 30 15% 8%;
+    --foreground: 40 20% 95%;
+
+    --card: 30 12% 12%;
+    --card-foreground: 40 20% 95%;
+
+    --popover: 30 12% 12%;
+    --popover-foreground: 40 20% 95%;
+
+    --primary: 38 92% 50%;
+    --primary-foreground: 30 25% 10%;
+    --primary-glow: 38 95% 55%;
+    --primary-dark: 35 85% 40%;
+
+    --secondary: 25 50% 30%;
+    --secondary-foreground: 0 0% 98%;
+
+    --muted: 30 10% 18%;
+    --muted-foreground: 40 10% 60%;
+
+    --accent: 24 95% 53%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 30 10% 22%;
+    --input: 30 10% 20%;
+    --ring: 38 95% 55%;
+
+    --gradient-hero: linear-gradient(135deg, hsl(38 92% 50%), hsl(30 85% 45%), hsl(24 95% 53%));
+    --gradient-card: linear-gradient(to bottom, hsl(30 12% 12%), hsl(30 15% 8%));
+    --gradient-promo: linear-gradient(135deg, hsl(25 70% 25%), hsl(30 60% 20%));
+
+    --shadow-elegant: 0 10px 30px -10px hsl(38 92% 50% / 0.4);
+    --shadow-glow: 0 0 40px hsl(38 95% 55% / 0.3);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* BebeMais custom styles */
+.hero-text-light {
+  color: hsl(30 25% 12%) !important;
+  font-weight: 700 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.dark .hero-text-light {
+  color: hsl(40 20% 95%) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Glass effect for cards */
+.glass-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.dark .glass-card {
+  background: rgba(30, 25, 20, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Promo badge animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 15px hsl(24 95% 53% / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 25px hsl(24 95% 53% / 0.6);
+  }
+}
+
+.promo-badge {
+  animation: pulse-glow 2s infinite;
+}

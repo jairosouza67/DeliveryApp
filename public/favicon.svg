@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <defs>
+    <linearGradient id="beerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F59E0B"/>
+      <stop offset="50%" style="stop-color:#D97706"/>
+      <stop offset="100%" style="stop-color:#EA580C"/>
+    </linearGradient>
+  </defs>
+  <!-- Beer mug body -->
+  <rect x="20" y="25" width="45" height="55" rx="8" fill="url(#beerGradient)"/>
+  <!-- Mug handle -->
+  <path d="M65 35 Q80 35 80 50 Q80 65 65 65" stroke="url(#beerGradient)" stroke-width="8" fill="none" stroke-linecap="round"/>
+  <!-- Foam bubbles -->
+  <circle cx="30" cy="22" r="8" fill="#FEF3C7"/>
+  <circle cx="42" cy="18" r="10" fill="#FEF3C7"/>
+  <circle cx="55" cy="22" r="8" fill="#FEF3C7"/>
+  <circle cx="36" cy="12" r="6" fill="#FEF3C7"/>
+  <circle cx="48" cy="10" r="7" fill="#FEF3C7"/>
+  <!-- Beer liquid lines -->
+  <line x1="28" y1="40" x2="28" y2="70" stroke="#FCD34D" stroke-width="2" opacity="0.6"/>
+  <line x1="38" y1="35" x2="38" y2="75" stroke="#FCD34D" stroke-width="2" opacity="0.6"/>
+  <line x1="48" y1="38" x2="48" y2="72" stroke="#FCD34D" stroke-width="2" opacity="0.6"/>
+  <line x1="56" y1="42" x2="56" y2="68" stroke="#FCD34D" stroke-width="2" opacity="0.6"/>
+</svg>
