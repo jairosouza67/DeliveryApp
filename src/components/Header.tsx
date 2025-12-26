@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ShoppingCart, Menu, X, Beer, Clock, MapPin, Lock } from "lucide-react";
 import { useState } from "react";
 import { CartDrawer } from "./CartDrawer";
+import { ThemeToggle } from "./ThemeToggle";
 import { useCart } from "@/contexts/CartContext";
 
 export const Header = () => {
@@ -60,6 +61,7 @@ export const Header = () => {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <CartDrawer />
 
           {/* Área Restrita Button - Desktop */}

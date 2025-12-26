@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase-external";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
+import { AdminLayout } from "@/components/layouts/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -19,17 +18,12 @@ import {
   XCircle
 } from "lucide-react";
 import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
   ResponsiveContainer,
   PieChart,
   Pie,
   Cell,
-  Legend
+  Legend,
+  Tooltip
 } from "recharts";
 
 const Dashboard = () => {
@@ -178,229 +172,227 @@ const Dashboard = () => {
     return `R$ ${value.toFixed(2).replace('.', ',')}`;
   };
 
-  const sidebarItems = [
-    { icon: ShoppingCart, label: "Pedidos", path: "/admin/pedidos" },
-    { icon: Package, label: "Produtos", path: "/admin/products" },
-    { icon: Users, label: "Clientes", path: "/admin/customers" },
-    { icon: Truck, label: "Fornecedores", path: "/admin/suppliers" },
-  ];
+  const renderCustomLabel = (props: any) => {
+    const { status, percentage } = props;
+    return `${status}: ${percentage.toFixed(0)}%`;
+  };
 
   return (
-    <div className="h-screen flex flex-col">
-      <Header />
-      <div className="flex-1 flex overflow-hidden">
-        {/* Sidebar */}
-        <aside className="hidden md:flex w-64 flex-col border-r bg-muted/30 flex-shrink-0">
-          <div className="p-6 border-b">
-            <h2 className="font-semibold text-lg">Painel Admin</h2>
-            <p className="text-sm text-muted-foreground">Gestão BebeMais</p>
+    <AdminLayout title="Resumo Geral" subtitle="Bem-vindo de volta! Aqui está uma visão rápida do seu negócio hoje.">
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
+        <Card className="glass-card border-none relative overflow-hidden group hover:scale-[1.02] transition-all duration-500 card-hover-effect">
+          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <DollarSign className="w-24 h-24 -mr-8 -mt-8" />
           </div>
-          <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3 px-3">
-              Ações Rápidas
-            </p>
-            {sidebarItems.map((item) => (
-              <Button
-                key={item.path}
-                variant="ghost"
-                className="w-full justify-start gap-3 h-11"
-                onClick={() => navigate(item.path)}
-              >
-                <item.icon className="h-5 w-5" />
-                {item.label}
-              </Button>
-            ))}
-          </nav>
-          <div className="p-4 border-t">
-            <Button
-              variant="outline"
-              className="w-full justify-start gap-3"
-              onClick={() => navigate("/")}
-            >
-              <Package className="h-4 w-4" />
-              Voltar à Loja
-            </Button>
-          </div>
-        </aside>
-
-        {/* Main Content */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-2">Dashboard BebeMais</h1>
-            <p className="text-muted-foreground">Gestão do delivery de bebidas</p>
-          </div>
-
-          {/* Mobile Quick Actions */}
-          <div className="md:hidden mb-6">
-            <div className="flex gap-2 overflow-x-auto pb-2">
-              {sidebarItems.map((item) => (
-                <Button
-                  key={item.path}
-                  variant="outline"
-                  size="sm"
-                  className="flex-shrink-0 gap-2"
-                  onClick={() => navigate(item.path)}
-                >
-                  <item.icon className="h-4 w-4" />
-                  {item.label}
-                </Button>
-              ))}
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Vendas Totais</CardTitle>
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <DollarSign className="h-5 w-5 text-primary" />
             </div>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <div className="text-4xl font-black text-primary tracking-tight mb-1">{formatCurrency(stats.todaySales)}</div>
+            <div className="flex items-center gap-1 text-[10px] font-bold text-emerald-500 uppercase tracking-tighter">
+              <TrendingUp className="h-3 w-3" />
+              +12% desde ontem
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="glass-card border-none relative overflow-hidden group hover:scale-[1.02] transition-all duration-500 card-hover-effect">
+          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <ShoppingCart className="w-24 h-24 -mr-8 -mt-8" />
           </div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Pedidos</CardTitle>
+            <div className="p-2 bg-blue-500/10 rounded-lg">
+              <ShoppingCart className="h-5 w-5 text-blue-500" />
+            </div>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <div className="text-4xl font-black tracking-tight mb-1">{stats.orders}</div>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">Total acumulado</p>
+          </CardContent>
+        </Card>
 
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <Card className="bg-gradient-to-br from-primary/10 to-primary/5 border-primary/20">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Vendas (Total)</CardTitle>
-                <DollarSign className="h-4 w-4 text-primary" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-primary">{formatCurrency(stats.todaySales)}</div>
-                <p className="text-xs text-muted-foreground">Pedidos aprovados</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Pedidos</CardTitle>
-                <ShoppingCart className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.orders}</div>
-                <p className="text-xs text-muted-foreground">Total de pedidos</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Produtos</CardTitle>
-                <Package className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.products}</div>
-                <p className="text-xs text-muted-foreground">No catálogo</p>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Clientes</CardTitle>
-                <Users className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.customers}</div>
-                <p className="text-xs text-muted-foreground">Cadastrados</p>
-              </CardContent>
-            </Card>
+        <Card className="glass-card border-none relative overflow-hidden group hover:scale-[1.02] transition-all duration-500 card-hover-effect">
+          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <Package className="w-24 h-24 -mr-8 -mt-8" />
           </div>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Produtos</CardTitle>
+            <div className="p-2 bg-orange-500/10 rounded-lg">
+              <Package className="h-5 w-5 text-orange-500" />
+            </div>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <div className="text-4xl font-black tracking-tight mb-1">{stats.products}</div>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">Itens ativos</p>
+          </CardContent>
+        </Card>
 
-          {/* Analytics Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-            {/* Orders by Status */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5" />
-                  Pedidos por Status
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                {ordersByStatus.length > 0 ? (
-                  <ResponsiveContainer width="100%" height={250}>
-                    <PieChart>
-                      <Pie
-                        data={ordersByStatus}
-                        cx="50%"
-                        cy="50%"
-                        labelLine={false}
-                        label={({ status, percentage }) => `${status}: ${percentage.toFixed(0)}%`}
-                        outerRadius={80}
-                        fill="hsl(var(--primary))"
-                        dataKey="count"
-                      >
-                        {ordersByStatus.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip />
-                      <Legend />
-                    </PieChart>
-                  </ResponsiveContainer>
-                ) : (
-                  <div className="h-[250px] flex items-center justify-center text-muted-foreground">
-                    Nenhum pedido ainda
-                  </div>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Low Stock Products */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5 text-orange-500" />
-                  Produtos Fora de Estoque
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3 max-h-[250px] overflow-y-auto">
-                  {lowStockProducts.length === 0 ? (
-                    <p className="text-sm text-muted-foreground py-8 text-center">
-                      ✅ Todos os produtos estão em estoque
-                    </p>
-                  ) : (
-                    lowStockProducts.map((product, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-muted rounded-lg">
-                        <span className="font-medium">{product.name}</span>
-                        <Badge variant="destructive">Sem estoque</Badge>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+        <Card className="glass-card border-none relative overflow-hidden group hover:scale-[1.02] transition-all duration-500 card-hover-effect">
+          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+            <Users className="w-24 h-24 -mr-8 -mt-8" />
           </div>
-
-          {/* Recent Orders */}
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle>Pedidos Recentes</CardTitle>
-              <Button variant="outline" onClick={() => navigate("/admin/pedidos")}>
-                Ver Todos
-              </Button>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentOrders.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-8">
-                    Nenhum pedido recente
-                  </p>
-                ) : (
-                  recentOrders.map((order) => (
-                    <div key={order.id} className="flex items-center justify-between border-b pb-4 last:border-0">
-                      <div className="flex-1">
-                        <p className="font-medium">{order.customer_name}</p>
-                        <p className="text-sm text-muted-foreground">{order.customer_phone}</p>
-                      </div>
-                      <div className="text-right flex items-center gap-4">
-                        <div>
-                          <p className="font-semibold">{formatCurrency(order.total_value || 0)}</p>
-                          <p className="text-xs text-muted-foreground">
-                            {new Date(order.created_at).toLocaleDateString('pt-BR')}
-                          </p>
-                        </div>
-                        {getStatusBadge(order.status)}
-                      </div>
-                    </div>
-                  ))
-                )}
-              </div>
-            </CardContent>
-          </Card>
-        </main>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 relative z-10">
+            <CardTitle className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Clientes</CardTitle>
+            <div className="p-2 bg-purple-500/10 rounded-lg">
+              <Users className="h-5 w-5 text-purple-500" />
+            </div>
+          </CardHeader>
+          <CardContent className="relative z-10">
+            <div className="text-4xl font-black tracking-tight mb-1">{stats.customers}</div>
+            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-tighter">Base fiel</p>
+          </CardContent>
+        </Card>
       </div>
-    </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+        {/* Orders by Status */}
+        <Card className="glass-card border-none lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3 text-xl font-black tracking-tight">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <TrendingUp className="h-5 w-5 text-primary" />
+              </div>
+              Status das Vendas
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {ordersByStatus.length > 0 ? (
+              <div className="h-[300px] w-full mt-4">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={ordersByStatus}
+                      cx="50%"
+                      cy="50%"
+                      innerRadius={60}
+                      outerRadius={100}
+                      paddingAngle={8}
+                      dataKey="count"
+                    >
+                      {ordersByStatus.map((entry, index) => (
+                        <Cell
+                          key={`cell-${index}`}
+                          fill={COLORS[index % COLORS.length]}
+                          stroke="transparent"
+                          className="hover:opacity-80 transition-opacity cursor-pointer"
+                        />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                        borderRadius: '16px',
+                        border: 'none',
+                        boxShadow: '0 10px 30px rgba(0,0,0,0.1)',
+                        backdropFilter: 'blur(10px)'
+                      }}
+                    />
+                    <Legend
+                      verticalAlign="bottom"
+                      height={36}
+                      iconType="circle"
+                      formatter={(value) => <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{value}</span>}
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            ) : (
+              <div className="h-[300px] flex items-center justify-center text-muted-foreground font-medium">
+                Nenhum pedido registrado hoje
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Low Stock Products */}
+        <Card className="glass-card border-none">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-3 text-xl font-black tracking-tight">
+              <div className="p-2 bg-orange-500/10 rounded-lg">
+                <AlertTriangle className="h-5 w-5 text-orange-500" />
+              </div>
+              Atenção Estoque
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4 max-h-[300px] overflow-y-auto custom-scrollbar pr-2">
+              {lowStockProducts.length === 0 ? (
+                <div className="flex flex-col items-center justify-center py-12 text-center opacity-50">
+                  <CheckCircle className="h-12 w-12 text-emerald-500 mb-4" />
+                  <p className="text-sm font-bold uppercase tracking-widest">Estoque Completo</p>
+                </div>
+              ) : (
+                lowStockProducts.map((product, index) => (
+                  <div key={index} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 group hover:bg-white/10 transition-colors">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 bg-orange-500/10 rounded-xl flex items-center justify-center">
+                        <Package className="h-5 w-5 text-orange-500" />
+                      </div>
+                      <span className="font-bold text-sm tracking-tight">{product.name}</span>
+                    </div>
+                    <Badge variant="destructive" className="rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-widest">Esgotado</Badge>
+                  </div>
+                ))
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Recent Orders */}
+      <Card className="glass-card border-none relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 blur-[100px] pointer-events-none" />
+        <CardHeader className="flex flex-row items-center justify-between shrink-0 relative z-10">
+          <CardTitle className="text-2xl font-black tracking-tight">Atividade Recente</CardTitle>
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/admin/pedidos")}
+            className="font-bold uppercase text-[10px] tracking-[0.2em] hover:bg-primary/10 hover:text-primary transition-all"
+          >
+            Ver Relatório Completo
+          </Button>
+        </CardHeader>
+        <CardContent className="relative z-10">
+          <div className="space-y-4">
+            {recentOrders.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-20 text-center opacity-40">
+                <ShoppingCart className="h-16 w-16 mb-4" />
+                <p className="font-bold uppercase tracking-widest">Aguardando primeiros pedidos</p>
+              </div>
+            ) : (
+              recentOrders.map((order) => (
+                <div key={order.id} className="flex items-center justify-between p-5 bg-white/5 rounded-3xl border border-white/5 hover:bg-white/10 transition-all duration-300 group">
+                  <div className="flex items-center gap-5 flex-1">
+                    <div className="w-14 h-14 bg-gradient-to-br from-white/10 to-transparent rounded-2xl flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+                      <Users className="h-7 w-7 text-white/30" />
+                    </div>
+                    <div>
+                      <p className="font-black text-lg tracking-tight leading-tight">{order.customer_name}</p>
+                      <p className="text-xs text-muted-foreground font-medium flex items-center gap-2">
+                        <Clock className="w-3 h-3" />
+                        {new Date(order.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })} - {new Date(order.created_at).toLocaleDateString('pt-BR')}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-right flex items-center gap-8">
+                    <div className="hidden md:block">
+                      <p className="font-black text-2xl tracking-tighter text-primary">{formatCurrency(order.total_value || 0)}</p>
+                      <p className="text-[10px] text-muted-foreground font-black uppercase tracking-widest">Valor do Pedido</p>
+                    </div>
+                    {getStatusBadge(order.status)}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    </AdminLayout>
   );
 };
 
